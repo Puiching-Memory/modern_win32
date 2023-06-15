@@ -17,30 +17,57 @@ import wx.xrc
 class Main ( wx.Frame ):
 
 	def __init__( self, parent ):
-		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"Win32GUI", pos = wx.DefaultPosition, size = wx.Size( 500,300 ), style = 0|wx.TAB_TRAVERSAL )
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"Win32GUI", pos = wx.DefaultPosition, size = wx.Size( 500,300 ), style = 0|wx.BORDER_NONE|wx.TAB_TRAVERSAL )
 
 		self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
+		self.SetBackgroundColour( wx.Colour( 249, 249, 249 ) )
 
 		Main_Sizer = wx.BoxSizer( wx.VERTICAL )
 
 		Caption_Sizer = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
 
-		self.Ico_Button = wx.Button( self, wx.ID_ANY, u"MyButton", wx.DefaultPosition, wx.DefaultSize, 0 )
-		Caption_Sizer.Add( self.Ico_Button, 0, wx.ALL, 5 )
+		self.Ico_Button = wx.Button( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 32,32 ), wx.BORDER_NONE )
 
-		self.Title_Text = wx.StaticText( self, wx.ID_ANY, u"MyLabel", wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.Title_Text.Wrap( -1 )
+		self.Ico_Button.SetBitmap( wx.ArtProvider.GetBitmap( wx.ART_FOLDER_OPEN, wx.ART_MENU ) )
+		self.Ico_Button.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOWTEXT ) )
+		self.Ico_Button.SetBackgroundColour( wx.Colour( 243, 243, 243 ) )
 
-		Caption_Sizer.Add( self.Title_Text, 0, wx.ALL, 5 )
+		Caption_Sizer.Add( self.Ico_Button, 0, 0, 5 )
 
-		self.Minimize = wx.Button( self, wx.ID_ANY, u"MyButton", wx.DefaultPosition, wx.DefaultSize, 0 )
-		Caption_Sizer.Add( self.Minimize, 0, wx.ALL, 5 )
+		self.Title_Button = wx.Button( self, wx.ID_ANY, u"Title_Text_win32", wx.DefaultPosition, wx.Size( -1,32 ), wx.BORDER_NONE )
+		self.Title_Button.SetFont( wx.Font( 12, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "Segoe UI Variable Text" ) )
+		self.Title_Button.SetBackgroundColour( wx.Colour( 243, 243, 243 ) )
 
-		self.Maximize = wx.Button( self, wx.ID_ANY, u"MyButton", wx.DefaultPosition, wx.DefaultSize, 0 )
-		Caption_Sizer.Add( self.Maximize, 0, wx.ALL, 5 )
+		Caption_Sizer.Add( self.Title_Button, 0, 0, 5 )
 
-		self.Close_Button = wx.Button( self, wx.ID_ANY, u"MyButton", wx.DefaultPosition, wx.DefaultSize, 0 )
-		Caption_Sizer.Add( self.Close_Button, 0, wx.ALL, 5 )
+		self.Space_Button = wx.Button( self, wx.ID_ANY, u"Space", wx.DefaultPosition, wx.Size( -1,32 ), wx.BORDER_NONE )
+		self.Space_Button.SetBackgroundColour( wx.Colour( 243, 243, 243 ) )
+
+		Caption_Sizer.Add( self.Space_Button, 0, 0, 5 )
+
+		self.Minimize = wx.Button( self, wx.ID_ANY, u"–", wx.DefaultPosition, wx.Size( 32,32 ), wx.BORDER_NONE )
+
+		self.Minimize.SetBitmap( wx.NullBitmap )
+		self.Minimize.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOWTEXT ) )
+		self.Minimize.SetBackgroundColour( wx.Colour( 243, 243, 243 ) )
+
+		Caption_Sizer.Add( self.Minimize, 0, 0, 5 )
+
+		self.Maximize = wx.Button( self, wx.ID_ANY, u"▢", wx.DefaultPosition, wx.Size( 32,32 ), wx.BORDER_NONE )
+
+		self.Maximize.SetBitmap( wx.NullBitmap )
+		self.Maximize.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOWTEXT ) )
+		self.Maximize.SetBackgroundColour( wx.Colour( 243, 243, 243 ) )
+
+		Caption_Sizer.Add( self.Maximize, 0, 0, 5 )
+
+		self.Close_Button = wx.Button( self, wx.ID_ANY, u"✕", wx.DefaultPosition, wx.Size( 32,32 ), wx.BORDER_NONE )
+
+		self.Close_Button.SetBitmap( wx.NullBitmap )
+		self.Close_Button.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOWTEXT ) )
+		self.Close_Button.SetBackgroundColour( wx.Colour( 243, 243, 243 ) )
+
+		Caption_Sizer.Add( self.Close_Button, 0, 0, 5 )
 
 
 		Main_Sizer.Add( Caption_Sizer, 0, 0, 5 )
@@ -51,7 +78,15 @@ class Main ( wx.Frame ):
 
 		self.Centre( wx.BOTH )
 
+		# Connect Events
+		self.Bind( wx.EVT_RIGHT_DOWN, self.MainOnRightDown )
+
 	def __del__( self ):
 		pass
+
+
+	# Virtual event handlers, override them in your derived class
+	def MainOnRightDown( self, event ):
+		event.Skip()
 
 

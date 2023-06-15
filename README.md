@@ -51,7 +51,7 @@ wxpyhton默认创建的窗口是基于win32的，相较于win8中新增的[Direc
 
 # 做法
 
-## PlanA--重构标题栏
+## PlanA--wxpython
 
 win32创建的标题栏可以很好地适应windows视觉效果变化。然而，它不支持黑夜模式。一种可能的方法是，隐藏默认的标题栏，然后使用wxpython控件进行替代。
 
@@ -59,7 +59,7 @@ win32创建的标题栏可以很好地适应windows视觉效果变化。然而�
 
 缺点：依然不能摆脱GDI限制，无法实现高级窗口效果。
 
-#### Step1-移除原有标题栏
+### Step1-移除原有标题栏
 
 一般来说，我们通常会这样实例化一个wx.Frame：
 
@@ -75,17 +75,111 @@ wx.Frame.__init__( self, parent, id = wx.ID_ANY, title = u"Win32GUI", pos = wx.D
 wx.Frame.init ( self, parent, id = wx.ID_ANY, title = u"Win32GUI", pos = wx.DefaultPosition, size = wx.Size( 500,300 ), style = 0|wx.TAB_TRAVERSAL )
 ```
 
-#### Step2-添加wx控件
+### Step2-添加wx控件
 
-标题栏通常是由一系列按钮和文本组成的横排结构，要复现它的样式，我们要创建
+标题栏通常是由一系列按钮和文本组成的横排结构，要复现它的样式，我们要创建一组对应的wx控件：
 
-#### Step3-样式调整
+```python
+self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
+Main_Sizer = wx.BoxSizer( wx.VERTICAL )
+Caption_Sizer = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
 
-#### Step4-绑定windows API
+self.Ico_Button = wx.Button( self, wx.ID_ANY, u"MyButton", wx.DefaultPosition, wx.DefaultSize, 0 )
+Caption_Sizer.Add( self.Ico_Button, 0, wx.ALL, 5 )
+self.Title_Text = wx.StaticText( self, wx.ID_ANY, u"MyLabel", wx.DefaultPosition, wx.DefaultSize, 0 )
+self.Title_Text.Wrap( -1 )
+Caption_Sizer.Add( self.Title_Text, 0, wx.ALL, 5 )
+self.Minimize = wx.Button( self, wx.ID_ANY, u"MyButton", wx.DefaultPosition, wx.DefaultSize, 0 )
+Caption_Sizer.Add( self.Minimize, 0, wx.ALL, 5 )
+self.Maximize = wx.Button( self, wx.ID_ANY, u"MyButton", wx.DefaultPosition, wx.DefaultSize, 0 )
+Caption_Sizer.Add( self.Maximize, 0, wx.ALL, 5 )
+self.Close_Button = wx.Button( self, wx.ID_ANY, u"MyButton", wx.DefaultPosition, wx.DefaultSize, 0 )
+Caption_Sizer.Add( self.Close_Button, 0, wx.ALL, 5 )
 
-#### Step5-圆角窗口
+Main_Sizer.Add( Caption_Sizer, 0, 0, 5 )
+self.SetSizer( Main_Sizer )
+```
 
-Step6-黑夜模式
+这段代码做了什么？
+
+1. 调用SetSizeHints()方法设置窗口的最小大小和最大大小。这里设置为wx.DefaultSize,意思是由wxWidgets决定大小。
+2. 创建一个垂直的BoxSizer,名为Main_Sizer,用于容纳整个界面elements。
+3. 创建一个水平的WrapSizer,名为Caption_Sizer,用于容纳标题栏的elements。 wx.WRAPSIZER_DEFAULT_FLAGS表示使用WrapSizer的默认样式。
+4. 添加一个按钮控件Ico_Button到Caption_Sizer中,周边间距为5。
+5. 添加一个静态文本控件Title_Text到Caption_Sizer中,周边间距为5。
+6. 添加最小化按钮Minimize,最大化按钮Maximize和关闭按钮Close_Button到Caption_Sizer中,周边间距均为5。
+7. 将Caption_Sizer添加到Main_Sizer中,上下边距为5。
+8. 使用SetSizer()方法将Main_Sizer设置为窗口的主Sizer。
+
+所以总体来说,这段代码设计了一个带有标准标题栏的窗口界面,标题栏包含图标按钮、标题文本、最小化按钮、最大化按钮和关闭按钮。整个界面使用BoxSizer和WrapSizer布局。
+
+现在它看起来应该是这样的：![[picture1]](image/README/1686812765328.png)
+
+### Step3-样式调整
+
+我们将对这些控件进行调整，使他们看起来像是标题栏。设计标准参考win11设计原则--[[link](https://learn.microsoft.com/zh-cn/windows/apps/design/signature-experiences/design-principles)]
+
+```python
+self.SetBackgroundColour( wx.Colour( 249, 249, 249 ) )
+Main_Sizer = wx.BoxSizer( wx.VERTICAL )
+Caption_Sizer = wx.WrapSizer( wx.HORIZONTAL, wx.WRAPSIZER_DEFAULT_FLAGS )
+self.Ico_Button = wx.Button( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( 32,32 ), wx.BORDER_NONE )
+self.Ico_Button.SetBitmap( wx.ArtProvider.GetBitmap( wx.ART_FOLDER_OPEN, wx.ART_MENU ) )
+self.Ico_Button.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOWTEXT ) )
+self.Ico_Button.SetBackgroundColour( wx.Colour( 243, 243, 243 ) )
+Caption_Sizer.Add( self.Ico_Button, 0, 0, 5 )
+self.Title_Button = wx.Button( self, wx.ID_ANY, u"Title_Text_win32", wx.DefaultPosition, wx.Size( -1,32 ), wx.BORDER_NONE )
+self.Title_Button.SetFont( wx.Font( 12, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, False, "Segoe UI Variable Text" ) )
+self.Title_Button.SetBackgroundColour( wx.Colour( 243, 243, 243 ) )
+Caption_Sizer.Add( self.Title_Button, 0, 0, 5 )
+self.Space_Button = wx.Button( self, wx.ID_ANY, u"Space", wx.DefaultPosition, wx.Size( -1,32 ), wx.BORDER_NONE )
+self.Space_Button.SetBackgroundColour( wx.Colour( 243, 243, 243 ) )
+Caption_Sizer.Add( self.Space_Button, 0, 0, 5 )
+self.Minimize = wx.Button( self, wx.ID_ANY, u"–", wx.DefaultPosition, wx.Size( 32,32 ), wx.BORDER_NONE )
+self.Minimize.SetBitmap( wx.NullBitmap )
+self.Minimize.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOWTEXT ) )
+self.Minimize.SetBackgroundColour( wx.Colour( 243, 243, 243 ) )
+Caption_Sizer.Add( self.Minimize, 0, 0, 5 )
+self.Maximize = wx.Button( self, wx.ID_ANY, u"▢", wx.DefaultPosition, wx.Size( 32,32 ), wx.BORDER_NONE )
+self.Maximize.SetBitmap( wx.NullBitmap )
+self.Maximize.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOWTEXT ) )
+self.Maximize.SetBackgroundColour( wx.Colour( 243, 243, 243 ) )
+Caption_Sizer.Add( self.Maximize, 0, 0, 5 )
+self.Close_Button = wx.Button( self, wx.ID_ANY, u"✕", wx.DefaultPosition, wx.Size( 32,32 ), wx.BORDER_NONE )
+self.Close_Button.SetBitmap( wx.NullBitmap )
+self.Close_Button.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_WINDOWTEXT ) )
+self.Close_Button.SetBackgroundColour( wx.Colour( 243, 243, 243 ) )
+Caption_Sizer.Add( self.Close_Button, 0, 0, 5 )
+Main_Sizer.Add( Caption_Sizer, 0, 0, 5 )
+self.SetSizer( Main_Sizer )
+self.Layout()
+self.Centre( wx.BOTH )
+```
+
+有什么变化？
+
+1. 设置了背景色self.SetBackgroundColour( wx.Colour( 249, 249, 249 ) )
+2. 使用了wx.ArtProvider获取了一个文件夹图标给Ico_Button
+3. 为各个按钮设置了自定义的背景色和前景色
+4. 为Title_Text按钮设置了自定义字体
+5. 使用Unicode字符作为最小化、最大化和关闭按钮的内容
+
+现在它看起来是这样的：
+
+![1686827657547](image/README/1686827657547.png)
+
+### Step4-绑定windows API/wx.event
+
+
+### Step5-圆角窗口
+
+### Step6-黑夜模式
+
+### step7-自适应大小
+
+### step8-窗口缩放
+
+### Step9-Tips
 
 ## PlanB--Composition API
 
