@@ -80,6 +80,10 @@ class Main ( wx.Frame ):
 
 		# Connect Events
 		self.Bind( wx.EVT_RIGHT_DOWN, self.MainOnRightDown )
+		self.Space_Button.Bind( wx.EVT_LEFT_DOWN, self.OnMoveWindow )
+		self.Minimize.Bind( wx.EVT_LEFT_UP, self.OnMinimizeWindow )
+		self.Maximize.Bind( wx.EVT_LEFT_UP, self.OnMaximizeWindow )
+		self.Close_Button.Bind( wx.EVT_LEFT_UP, self.OnCloseWindow )
 
 	def __del__( self ):
 		pass
@@ -87,6 +91,18 @@ class Main ( wx.Frame ):
 
 	# Virtual event handlers, override them in your derived class
 	def MainOnRightDown( self, event ):
+		event.Skip()
+
+	def OnMoveWindow( self, event ):
+		event.Skip()
+
+	def OnMinimizeWindow( self, event ):
+		event.Skip()
+
+	def OnMaximizeWindow( self, event ):
+		event.Skip()
+
+	def OnCloseWindow( self, event ):
 		event.Skip()
 
 

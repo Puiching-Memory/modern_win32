@@ -1,9 +1,16 @@
-import wx
-from win32ui import CreateBitmapf
+import asyncio
+import winsdk.windows.ui.windowmanagement as wm
 
-# 创建一个PyCBitmap对象
-bitmap = CreateBitmap((16, 16), 1, 24, [0]*16*16*3)
-print(bitmap)
+async def create_window():
+    # 在异步上下文中创建AppWindow对象
+    window = await asyncio.to_thread(wm.AppWindow.try_create_async)
 
-# 将PyCBitmap对象转换为wx.Bitmap对象
-wx_bitmap = wx.BitmapFromBuffer(16, 16, bitmap.GetBitmapBits(True))
+    # 在异步上下文中设置窗口的标题和大小
+    await asyncio.to_thread(window.put_title, "My Window")
+    await asyncio.to_thread(window.request_size, (800, 600))
+
+    # 在异步上下文中显示窗口
+    await asyncio.to_thread(window.try_show)
+
+# 运行事件循环
+asyncio.run(create_window())

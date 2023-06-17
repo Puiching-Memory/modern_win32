@@ -290,6 +290,7 @@
                                 <property name="window_extra_style"></property>
                                 <property name="window_name"></property>
                                 <property name="window_style"></property>
+                                <event name="OnLeftDown">OnMoveWindow</event>
                             </object>
                         </object>
                         <object class="sizeritem" expanded="1">
@@ -363,6 +364,7 @@
                                 <property name="window_extra_style"></property>
                                 <property name="window_name"></property>
                                 <property name="window_style"></property>
+                                <event name="OnLeftUp">OnMinimizeWindow</event>
                             </object>
                         </object>
                         <object class="sizeritem" expanded="0">
@@ -436,6 +438,7 @@
                                 <property name="window_extra_style"></property>
                                 <property name="window_name"></property>
                                 <property name="window_style"></property>
+                                <event name="OnLeftUp">OnMaximizeWindow</event>
                             </object>
                         </object>
                         <object class="sizeritem" expanded="0">
@@ -509,6 +512,7 @@
                                 <property name="window_extra_style"></property>
                                 <property name="window_name"></property>
                                 <property name="window_style"></property>
+                                <event name="OnLeftUp">OnCloseWindow</event>
                             </object>
                         </object>
                     </object>

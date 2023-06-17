@@ -166,10 +166,9 @@ self.Centre( wx.BOTH )
 
 现在它看起来是这样的：
 
-![1686827657547](image/README/1686827657547.png)
+![[img2]](image/README/1686827657547.png)
 
 ### Step4-绑定windows API/wx.event
-
 
 ### Step5-圆角窗口
 
@@ -179,8 +178,23 @@ self.Centre( wx.BOTH )
 
 ### step8-窗口缩放
 
-### Step9-Tips
+### Step9-高DPI支持
 
 ## PlanB--Composition API
 
 ## PlanC--openGL
+
+
+https://learn.microsoft.com/zh-cn/windows/windows-app-sdk/api/winrt/microsoft.ui.windowing.appwindow?view=windows-app-sdk-1.3
+
+https://learn.microsoft.com/zh-cn/windows/apps/desktop/modernize/using-the-visual-layer-with-win32
+
+https://learn.microsoft.com/zh-cn/windows/apps/windows-app-sdk/windowing/windowing-overview#ui-framework-and-hwnd-interop
+
+https://learn.microsoft.com/zh-cn/windows/apps/develop/title-bar?tabs=wasdk
+
+https://github.com/Microsoft/xlang/tree/master/src/package/pywinrt/projection
+
+https://github.com/wxWidgets/wxWidgets/pull/23028
+
+https://www.cnblogs.com/validvoid/p/windows-composition-api-guide-introduction.html
